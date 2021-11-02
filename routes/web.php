@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::resource('mahasiswas', MahasiswaController::class);
+Route::get('/nilai/{id}', [App\Http\Controllers\MahasiswaController::class, 'nilai'])->name('nilai');

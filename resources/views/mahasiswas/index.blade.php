@@ -53,9 +53,10 @@
             <td> {{ $item->tgl_lahir }} </td>
             <td> {{ $item->no_hp }} </td>
             <td>
-                 <a class="btn btn-primary" href="{{route('mahasiswas.show', $item->nim)}}">Show</a>
-                 <a class="btn btn-success" href="{{route('mahasiswas.edit', $item->nim)}}">edit</a>
-                 <form onsubmit="return confirm('Aakah anda yakin ingin menghapus?')" class="d-inline" action="{{route('mahasiswas.destroy', $item->nim)}}" method="POST">
+                 <a class="btn btn-primary" href="{{route('mahasiswas.show', $item->id)}}">Show</a>
+                 <a class="btn btn-success" href="{{route('mahasiswas.edit', $item->id)}}">edit</a>
+                 <a class="btn btn-info" href="{{route('nilai', $item->id)}}">Nilai</a>
+                 <form onsubmit="return confirm('Aakah anda yakin ingin menghapus?')" class="d-inline" action="{{route('mahasiswas.destroy', $item->id)}}" method="POST">
                  @csrf
                  <input type="hidden" name="_method" value="DELETE">
                  <input type="submit" value="Delete" class="btn btn-danger btn-sm">

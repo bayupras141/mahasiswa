@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
 use App\Models\Kelas;
+use App\Models\Matakuliah;
+use App\Models\MahasiswaMataKuliah;
 use Illuminate\Http\Request;
 use Alert;
+use DB;
 
 class MahasiswaController extends Controller
 {
@@ -77,6 +80,7 @@ class MahasiswaController extends Controller
     public function show($id)
     {
         $mahasiswa = Mahasiswa::with('kelas')->find($id);
+        @dd($mahasiswa);
         return view('mahasiswas.show', compact('mahasiswa'));
     }
 
@@ -137,5 +141,19 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($id);
         $mahasiswa->delete();
         return redirect()->route('mahasiswas.index')->with('status', 'Berhasil menghapus mahasiswa');
+    }
+
+    public function nilai($id)
+    {
+        $mahasiswa = Mahasiswa::with('kelas')->find($id);
+        // $mahasiswa_matakuliah = DB::table('mahasiswa_matakuliah')->where('name', 'John')->value('email');
+        // $mahasiswa_matakuliah = MahasiswaMataKuliah::with('mataKuliah')->where('mahasiswa_id', $id)->get();
+
+        $mahasiswa_matakuliah = DB::table('mahasiswa_matakuliah')
+            ->join('matakuliah', 'matakuliah.id', '=', 'mahasiswa_matakuliah.matakuliah_id')
+            ->select('mahasiswa_matakuliah.*', 'matakuliah.*')
+            ->get();
+        // @dd($mahasiswa_matakuliah);
+        return view('mahasiswas.nilai', compact('mahasiswa', 'mahasiswa_matakuliah'));
     }
 }
