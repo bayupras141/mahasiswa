@@ -7,7 +7,6 @@ use App\Models\Kelas;
 use App\Models\Matakuliah;
 use App\Models\MahasiswaMataKuliah;
 use Illuminate\Http\Request;
-use Alert;
 use DB;
 
 class MahasiswaController extends Controller
@@ -80,7 +79,6 @@ class MahasiswaController extends Controller
     public function show($id)
     {
         $mahasiswa = Mahasiswa::with('kelas')->find($id);
-        @dd($mahasiswa);
         return view('mahasiswas.show', compact('mahasiswa'));
     }
 
