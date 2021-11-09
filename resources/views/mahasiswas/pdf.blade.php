@@ -1,6 +1,15 @@
-@extends('mahasiswas.layout')
-  
-@section('content')
+<style>
+    /* create css table */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+    }
+    /* create css h1 text align center */
+    h1 {
+        text-align: center;
+    }
+</style>
 <div class="col-md-4">
     <h1>Kartu Hasil Studi (KHS)</h1>
     <div class="card">
@@ -36,4 +45,3 @@
         </div>
     </div>
 </div>
-@endsection

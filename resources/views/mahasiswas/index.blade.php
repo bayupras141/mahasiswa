@@ -1,5 +1,4 @@
 @extends('mahasiswas.layout')
-@include('sweetalert::alert')
 @section('content')
 <div class="container">
     <br>

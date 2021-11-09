@@ -19,6 +19,7 @@ class Mahasiswa extends Model
         'no_hp',
         'email',
         'tgl_lahir',
+        'foto',
     ];
     public $timestamps = false;
 
