@@ -33,8 +33,6 @@
                 </tr>
                 @endforeach
             </table>
-            <a class="btn btn-danger" href="{{route('mahasiswas.index')}}">Kembali</a>
-            <a class="btn btn-primary float-right" href="{{route('mahasiswas.cetak_pdf', $mahasiswa->id)}}" target="_blank">Print</a>
         </div>
     </div>
 </div>

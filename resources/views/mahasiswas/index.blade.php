@@ -19,9 +19,7 @@
                     </div>
                 </div>
             </form>
-            <div class="col-md-4">
-                <a class="btn btn-success" href="{{route('mahasiswas.create')}}">Input Mahasiswa</a>
-            </div>
+            <a class="btn btn-success" href="{{route('mahasiswas.create')}}">Input Mahasiswa</a>
         </div>
     </div>
 </div>
@@ -36,6 +34,7 @@
         <div class="card-body">
             <table class="table table-bordered" border="1">
             <tr>
+                <th>Foto</th>
                 <th>Nim</th>
                 <th>Nama</th>
                 <th>Email</th>
@@ -47,6 +46,7 @@
             </tr>
             @foreach ($tableMhs as $item)
             <tr>
+                <td> <img width="100px" src="{{asset('storage/'.$item->foto)}}"> </td>
                 <td> {{ $item->nim }} </td>
                 <td> {{ $item->nama }} </td>
                 <td> {{ $item->email }} </td>

@@ -15,7 +15,7 @@ class CreateMahasiswaMatakuliah extends Migration
     {
         Schema::create('mahasiswa_matakuliah', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('mahasiswa_id')->nullable();
+            $table->integer('mahasiswa_id')->nullable();
             $table->unsignedBigInteger('matakuliah_id')->nullable();
             $table->integer('nilai');
             $table->foreign('mahasiswa_id')->references('id')->on('mahasiswa');

@@ -35,7 +35,7 @@
                         </div>
                         <div class="form-group">
                             <label for="kelas">Kelas</label>
-                            <select name="kelas" id="kelas" class="form-control">
+                            <select name="kelas_id" id="kelas_id" class="form-control">
                                 @foreach($kelas as $k)
                                     <option value="{{$k->id}}">{{$k->nama_kelas}}</option>
                                 @endforeach
@@ -62,6 +62,14 @@
                             <label for="title">No Handphone</label>
                             <input type="text" name="no_hp" id="no_hp" class="form-control @error('no_hp') is-invalid @enderror" placeholder="Silahkan isi no handphone..">
                             @error('title')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="picture">Foto</label>
+                            <br>
+                            <input type="file" name="foto" id="foto" class="form-control @error('foto') is-invalid @enderror">
+                            @error('picture')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>

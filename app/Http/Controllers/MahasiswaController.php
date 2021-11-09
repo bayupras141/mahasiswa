@@ -8,6 +8,7 @@ use App\Models\Matakuliah;
 use App\Models\MahasiswaMataKuliah;
 use Illuminate\Http\Request;
 use DB;
+use PDF;
 
 class MahasiswaController extends Controller
 {
@@ -47,26 +48,20 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nim' => 'required',
-            'nama' => 'required',
-            'kelas' => 'required',
-            'jurusan' => 'required',
-            'no_hp' => 'required',
-            'email' => 'required',
-            'tgl_lahir' => 'required',
-        ]);
-        $mahasiswa = Mahasiswa::create([
-            'nim' => $request->nim,
-            'nama' => $request->nama,
-            'kelas_id' => $request->kelas,
-            'jurusan' => $request->jurusan,
-            'no_hp' => $request->no_hp,
-            'email' => $request->email,
-            'tgl_lahir' => $request->tgl_lahir,
-
-        ]);
-
+        $mahasiswa = new \App\Models\Mahasiswa;
+        $mahasiswa->nim = $request->nim;
+        $mahasiswa->nama = $request->nama;
+        $mahasiswa->email = $request->email;
+        $mahasiswa->jurusan = $request->jurusan;
+        $mahasiswa->tgl_lahir = $request->tgl_lahir;
+        $mahasiswa->no_hp = $request->no_hp;
+        $mahasiswa->kelas_id = $request->kelas_id;
+        if($request->file('foto')){
+            $file = $request->file('foto')->store('images', 'public');
+            $mahasiswa->foto = $file;
+        }
+        
+        $mahasiswa->save();
         return redirect()->route('mahasiswas.index')->with('status', 'Berhasil menabah mahasiswa');
     }
 
@@ -104,26 +99,25 @@ class MahasiswaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nim' => 'required',
-            'nama' => 'required',
-            'kelas' => 'required',
-            'jurusan' => 'required',
-            'no_hp' => 'required',
-            'email' => 'required',
-            'tgl_lahir' => 'required',
-        ]);
-        $mahasiswa = Mahasiswa::find($id)->update([
-            'nim' => $request->nim,
-            'nama' => $request->nama,
-            'kelas_id' => $request->kelas,
-            'jurusan' => $request->jurusan,
-            'no_hp' => $request->no_hp,
-            'email' => $request->email,
-            'tgl_lahir' => $request->tgl_lahir,
-
-        ]);
+    {            
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        
+        $mahasiswa->nim = $request->nim;
+        $mahasiswa->nama = $request->nama;
+        $mahasiswa->kelas_id = $request->kelas_id;
+        $mahasiswa->jurusan = $request->jurusan;
+        $mahasiswa->no_hp = $request->no_hp;
+        $mahasiswa->email = $request->email;
+        $mahasiswa->tgl_lahir = $request->tgl_lahir;
+        if($request->file('foto')){
+            if($mahasiswa->foto && file_exists(storage_path('app/public/' .$mahasiswa->foto))){
+                \Storage::delete('public/'.$mahasiswa->foto);
+            }
+            $file = $request->file('foto')->store('images', 'public');
+            $mahasiswa->foto = $file;
+        }
+            
+        $mahasiswa->save();
 
         return redirect()->route('mahasiswas.index')->with('status', 'Berhasil mengubah mahasiswa');
     }
@@ -149,9 +143,28 @@ class MahasiswaController extends Controller
 
         $mahasiswa_matakuliah = DB::table('mahasiswa_matakuliah')
             ->join('matakuliah', 'matakuliah.id', '=', 'mahasiswa_matakuliah.matakuliah_id')
+            ->join('mahasiswa', 'mahasiswa.id', '=', 'mahasiswa_matakuliah.mahasiswa_id')
             ->select('mahasiswa_matakuliah.*', 'matakuliah.*')
+            ->where('mahasiswa_id', $id)
             ->get();
         // @dd($mahasiswa_matakuliah);
         return view('mahasiswas.nilai', compact('mahasiswa', 'mahasiswa_matakuliah'));
     }
+
+    // create function cetak_pdf
+    public function cetak_pdf($id)
+    {
+        $mahasiswa = Mahasiswa::with('kelas')->find($id);
+
+        $mahasiswa_matakuliah = DB::table('mahasiswa_matakuliah')
+            ->join('matakuliah', 'matakuliah.id', '=', 'mahasiswa_matakuliah.matakuliah_id')
+            ->join('mahasiswa', 'mahasiswa.id', '=', 'mahasiswa_matakuliah.mahasiswa_id')
+            ->select('mahasiswa_matakuliah.*', 'matakuliah.*')
+            ->where('mahasiswa_id', $id)
+            ->get();
+        // @dd($mahasiswa_matakuliah);
+        $pdf = PDF::loadview('mahasiswas.pdf', compact('mahasiswa','mahasiswa_matakuliah'));
+        return $pdf->stream();
+    }
+
 }
